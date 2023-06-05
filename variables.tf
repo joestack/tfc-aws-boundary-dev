@@ -9,19 +9,29 @@ variable "name" {
 }
 
 variable "vpc_id" {
-  
+  description = "The ID of the VPC"
+  type        = string
 }
 
 variable "private_subnets" {
-  
+  description = "List of private subnet ids"
+  type        = list(string)
 }
 
 variable "public_subnets" {
-  
+  description = "List of public subnet ids"
+  type        = list(string)
 }
 
 variable "tags" {
-  
+  default = {}
+
+  description = <<EOF
+One or more tags. You can tag your Auto Scaling group and propagate the tags to
+the Amazon EC2 instances it launches.
+EOF
+
+  type = map(string)
 }
 
 variable "server_count" {
