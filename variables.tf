@@ -10,16 +10,19 @@ variable "name" {
 
 variable "vpc_id" {
   description = "The ID of the VPC"
+  default = ""
   type        = string
 }
 
 variable "private_subnets" {
   description = "List of private subnet ids"
+  default = []
   type        = list(string)
 }
 
 variable "public_subnets" {
   description = "List of public subnet ids"
+  default = []
   type        = list(string)
 }
 
