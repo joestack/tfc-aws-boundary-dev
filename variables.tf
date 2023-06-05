@@ -8,6 +8,22 @@ variable "name" {
   description = "Environment name to be used as Tag"
 }
 
+variable "vpc_id" {
+  
+}
+
+variable "private_subnets" {
+  
+}
+
+variable "public_subnets" {
+  
+}
+
+variable "tags" {
+  
+}
+
 variable "server_count" {
   description = "Amount of cluster instances (odd number 1,3, max 5)"
   default     = "3"
@@ -52,7 +68,7 @@ variable "whitelist_ip" {
 
 variable "network_address_space" {
   description = "The default CIDR to use"
-  default     = "172.16.0.0/16"
+  default     = "10.0.0.0/16"
 }
 
 // GLOBAL CERT SETTINGS
@@ -72,162 +88,16 @@ variable "organization" {
   default     = "joestack"
 }
 
-//VAULT SETTINGS
+//BOUNDARY SETTINGS
 
-variable "vault_enabled" {
+variable "boundary_enabled" {
   default = "false"
 }
 
-variable "vault_version" {
-  description = "i.e. 1.9.3 or 1.9.3+ent 'apt-cache show vault-enterprise'"
-  default     = "1.9.3"
+variable "boundary_version" {
+  default = "0.12.2-1"
 }
 
-variable "vault_lic" {
-  description = "You must be mad to assign sensitive values to a variable here! Use one of the other options"
-  default     = "NULL"
-}
-
-variable "vault_tls_enabled" {
-  description = "If set to true you need to provide common name, organization, and dns_domain as well"
-  default     = "true"
-}
-
-
-//CONSUL SETTINGS
-
-variable "consul_enabled" {
-  default = "false"
-}
-
-variable "consul_version" {
-  description = "i.e. 1.11.2 or 1.11.2+ent nowadays +ent-1 'apt-cache show consul-enterprise'"
-  default     = "1.13.3-1"
-}
-
-variable "consul_lic" {
-  description = "You must be mad to assign sensitive values to a variable here! Use one of the other options"
-  default     = "NULL"
-}
-
-variable "consul_tls_enabled" {
-  description = "If set to true you need to provide common name, organization, and dns_domain as well"
-  default     = "true"
-}
-
-//variable "datatenter" is used from the NOMAD SETTINGS block
-
-//NOMAD SETTINGS
-
-variable "nomad_enabled" {
-  default = "false"
-}
-
-variable "nomad_version" {
-  description = "i.e. 1.2.5 or 1.2.5+ent 'apt-cache show nomad-enterprise'"
-  default     = "1.2.5"
-}
-
-variable "nomad_lic" {
-  description = "You must be mad to assign sensitive values to a variable here! Use one of the other options"
-  default     = "NULL"
-}
-
-variable "nomad_bootstrap" {
-  default = "false"
-}
-
-variable "datacenter" {
-  default = "dc1"
-}
-
-variable "region" {
-  default = "global"
-}
-
-variable "client" {
-  description = "enable nomad client option?"
-  default     = "true"
-}
-variable "client_count" {
-  description = "amount of nomad clients?"
-  default     = "3"
-}
-# variable "client_name" {
-#   default = "nmd-worker"
-# }
-
-
-// TERRAFORM
-
-variable "terraform_enabled" {
-  default = "false"
-}
-
-variable "tfe_airgapped" {
-  description = "[true or false] The value of tfe_lic has to be `base64 -w0 ` encoded if set to true"
-  default     = "false"
-}
-
-variable "tfe_lic" {
-  description = "You must be mad to assign sensitive values to a variable here! Use one of the other options"
-  default     = "NULL"
-}
-
-variable "tfe_auth_password" {
-  description = "The initial password to access the TFE app on port 8800. If not specified, a random one will be created"
-  default     = "NULL"
-}
-
-variable "tfe_enc_password" {
-  description = "If not specified, a random one will be created"
-  default     = "NULL"
-}
-
-variable "tfe_hostname" {
-  default = "tfe-joestack"
-}
-
-variable "tfe_cert_provider" {
-  description = "TLS cert option [self-signed,certbot,tf-tls-provider]"
-  default     = "certbot"
-}
-
-variable "tfe_cert_email" {
-  description = "mandatory in case of using certbot"
-}
-
-variable "tfe_auto_install" {
-  description = "run the tfe install.sh directly by the user-data script. You can run is manually if set to false"
-  default     = "true"
-}
-
-## Development section ##
-# injecting the initial secret zero credentials into a TFC Var-Set acting as secure K/V store
-# - Vault Root Token
-
-variable "vault_init" {
-  description = "auto unseal the cluster and store the root_token into a TF Var-Set"
-  default     = "false"
-} 
-
-variable "tfc_var_set" {
-  description  = "The name of the Var-Set to be used to store the initial secret zero"
-  default      = "NULL"
-}
-
-variable "tfc_workspace" {
-  default     = "NULL"
-}
-
-variable "tfc_token" {
-  default     = "NULL"
-}
-
-variable "tfc_address" {
-  default     = "app.terraform.io"
-}
-
-variable "tfc_org" {
-  default     = "NULL" 
+variable "boundary_lic" {
+  default = "NULL"
 }
