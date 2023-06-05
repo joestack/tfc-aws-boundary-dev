@@ -92,8 +92,8 @@ module "alb" {
   load_balancer_type = "application"
   name               = "boundary"
   security_groups    = [aws_security_group.alb.id]
-  subnets            = var.public_subnets
-  tags               = var.tags
+  subnets            = local.public_subnets
+  tags               = local.tags
   
   target_groups = [
     {
@@ -103,7 +103,7 @@ module "alb" {
     }
   ]
 
-  vpc_id = var.vpc_id
+  vpc_id = local.vpc_id
 }
 
 
@@ -126,7 +126,7 @@ resource "aws_security_group" "bastion" {
 
   name   = "Boundary Bastion"
   tags   = var.tags
-  vpc_id = var.vpc_id
+  vpc_id = local.vpc_id
 }
 
 resource "aws_instance" "bastion" {
@@ -136,7 +136,7 @@ resource "aws_instance" "bastion" {
   associate_public_ip_address = true
   instance_type               = "t3.micro"
   key_name                    = var.key_name
-  subnet_id                   = var.public_subnets[0]
+  subnet_id                   = local.public_subnets[0]
   tags                        = merge(var.tags, { Name = "Boundary Bastion" })
   vpc_security_group_ids      = [one(aws_security_group.bastion[*].id)]
 }
