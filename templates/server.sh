@@ -40,8 +40,47 @@ EOF
 ## FIXME tbc
 }
 
+create_configuration() {
+    tee /etc/boundary.d/configuration.hcl > /dev/null <<EOF
+    controller {
+  database {
+    url = "${database_url}"
+  }
+
+  name = "controller"
+}
+
+disable_mlock = true
+
+
+kms "awskms" {
+  kms_key_id = "${key_root}"
+  purpose    = "root"
+}
+
+kms "awskms" {
+  kms_key_id = "${key_auth}"
+  purpose    = "worker-auth"
+}
+
+listener "tcp" {
+  address     = "$(private_ip):9201"
+  purpose     = "cluster"
+  tls_disable = true
+}
+
+listener "tcp" {
+  address     = "$(private_ip):9200"
+  purpose     = "api"
+  tls_disable = true
+}
+EOF
+
+}
+
+
 init_configuration() {
-    echo ${configuration} | base64 -d > /etc/boundary.d/configuration.hcl
+    #echo ${configuration} | base64 -d > /etc/boundary.d/configuration.hcl
     boundary database init -config /etc/boundary.d/configuration.hcl -log-format json
 }
 
@@ -56,5 +95,6 @@ start_boundary() {
 
 common
 [[ ${boundary_enabled} = "true" ]] && install_boundary_apt 
+[[ ${boundary_enabled} = "true" ]] && create_configuration 
 [[ ${boundary_enabled} = "true" ]] && init_configuration 
 [[ ${boundary_enabled} = "true" ]] && start_boundary 

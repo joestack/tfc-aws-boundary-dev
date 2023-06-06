@@ -5,31 +5,40 @@ locals {
   ca_cert           = var.create_root_ca ? tls_private_key.ca.0.public_key_pem : "NULL"
   fqdn_tls          = [for i in range(var.controller_desired_capacity) : format("%v-srv-%02d.%v", var.name, i + 1, var.dns_domain)]
   server_ca         = var.create_root_ca ? tls_self_signed_cert.ca.0.cert_pem : "NULL"
-  configuration     = base64encode(templatefile(
-    "${path.module}/templates/configuration.hcl.tpl",
-    {
-      # Database URL for PostgreSQL
-      database_url = format(
+  database_url      = format(
         "postgresql://%s:%s@%s/%s",
         module.postgresql.db_instance_username,
         module.postgresql.db_instance_password,
         module.postgresql.db_instance_endpoint,
         module.postgresql.db_instance_name
       )
+  key_root          = aws_kms_key.root.key_id
+  key_auth          = aws_kms_key.auth.key_id
+  # configuration     = base64encode(templatefile(
+  #   "${path.module}/templates/configuration.hcl.tpl",
+  #   {
+  #     # Database URL for PostgreSQL
+  #     database_url = format(
+  #       "postgresql://%s:%s@%s/%s",
+  #       module.postgresql.db_instance_username,
+  #       module.postgresql.db_instance_password,
+  #       module.postgresql.db_instance_endpoint,
+  #       module.postgresql.db_instance_name
+  #     )
 
-      keys = [
-        {
-          key_id  = aws_kms_key.root.key_id
-          purpose = "root"
-        },
-        {
-          key_id  = aws_kms_key.auth.key_id
-          purpose = "worker-auth"
-        }
-      ]
-    }
-  )
-  )
+  #     keys = [
+  #       {
+  #         key_id  = aws_kms_key.root.key_id
+  #         purpose = "root"
+  #       },
+  #       {
+  #         key_id  = aws_kms_key.auth.key_id
+  #         purpose = "worker-auth"
+  #       }
+  #     ]
+  #   }
+  # )
+  # )
 }
 
 data "template_file" "server" {
@@ -56,17 +65,12 @@ data "template_file" "server" {
     boundary_version  = var.boundary_version
     boundary_apt      = local.boundary_apt
     boundary_lic      = var.boundary_lic
-    configuration     = local.configuration
+    #configuration     = local.configuration
+    database_url      = local.database_url
+    key_root          = local.key_root
+    key_auth          = local.key_auth
   }
 
-  # write_files = [
-  #   {
-  #     content     = local.configuration
-  #     owner       = "root:root"
-  #     path        = "/etc/boundary/configuration.hcl"
-  #     permissions = "0644"
-  #   }
-  # ]
 }
 
 data "template_cloudinit_config" "server" {
