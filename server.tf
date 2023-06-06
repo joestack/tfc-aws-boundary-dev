@@ -5,7 +5,7 @@ locals {
   ca_cert           = var.create_root_ca ? tls_private_key.ca.0.public_key_pem : "NULL"
   fqdn_tls          = [for i in range(var.controller_desired_capacity) : format("%v-srv-%02d.%v", var.name, i + 1, var.dns_domain)]
   server_ca         = var.create_root_ca ? tls_self_signed_cert.ca.0.cert_pem : "NULL"
-  configuration     = base64decode(templatefile(
+  configuration     = base64encode(templatefile(
     "${path.module}/templates/configuration.hcl.tpl",
     {
       # Database URL for PostgreSQL
