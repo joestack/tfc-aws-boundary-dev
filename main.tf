@@ -8,7 +8,7 @@ terraform {
 }
 
 locals {
-  #image_id = data.aws_ami.boundary.id
+  image_id = data.aws_ami.boundary.id
 
   #private_subnets = coalescelist(var.private_subnets, module.vpc.private_subnets)
   private_subnets = module.vpc.private_subnets
@@ -160,11 +160,11 @@ resource "aws_security_group" "bastion" {
 resource "aws_instance" "bastion" {
   count = var.key_name != "" ? 1 : 0
 
-  ami                         = var.image_id
+  ami                         = local.image_id
   associate_public_ip_address = true
   instance_type               = "t3.micro"
   key_name                    = var.key_name
-  subnet_id                   = var.public_subnets[0]
+  subnet_id                   = local.public_subnets[0]
   tags                        = merge(var.tags, { Name = "Boundary Bastion" })
   vpc_security_group_ids      = [one(aws_security_group.bastion[*].id)]
 }
