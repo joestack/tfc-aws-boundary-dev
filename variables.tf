@@ -38,16 +38,16 @@ variable "key_name" {
 #   type        = list(string)
 # }
 
-# variable "tags" {
-#   default = {}
+variable "tags" {
+  default = {}
 
-#   description = <<EOF
-# One or more tags. You can tag your Auto Scaling group and propagate the tags to
-# the Amazon EC2 instances it launches.
-# EOF
+  description = <<EOF
+One or more tags. You can tag your Auto Scaling group and propagate the tags to
+the Amazon EC2 instances it launches.
+EOF
 
-#   type = map(string)
-# }
+  type = map(string)
+}
 
 # variable "server_count" {
 #   description = "Amount of cluster instances (odd number 1,3, max 5)"
