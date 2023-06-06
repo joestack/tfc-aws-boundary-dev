@@ -55,16 +55,17 @@ data "template_file" "server" {
     boundary_version  = var.boundary_version
     boundary_apt      = local.boundary_apt
     boundary_lic      = var.boundary_lic
+    configuration     = local.configuration
   }
 
-  write_files = [
-    {
-      content     = local.configuration
-      owner       = "root:root"
-      path        = "/etc/boundary/configuration.hcl"
-      permissions = "0644"
-    }
-  ]
+  # write_files = [
+  #   {
+  #     content     = local.configuration
+  #     owner       = "root:root"
+  #     path        = "/etc/boundary/configuration.hcl"
+  #     permissions = "0644"
+  #   }
+  # ]
 }
 
 data "template_cloudinit_config" "server" {

@@ -21,6 +21,7 @@ apt-get -y install ${boundary_apt}=${boundary_version}
 echo ${boundary_lic} > /etc/boundary.d/license.hclic
 #chown -R boundary:boundary /opt/boundary/
 
+echo ${configuration} > /etc/boundary.d/configuration.hcl
 
 tee /etc/systemd/system/boundary.service > /dev/null <<EOF
 [Unit]
@@ -28,7 +29,7 @@ Description=Access any system from anywhere based on user identity
 Documentation=https://www.boundaryproject.io/docs
 
 [Service]
-ExecStart=/usr/local/bin/boundary server -config /etc/boundary/configuration.hcl
+ExecStart=/usr/bin/boundary server -config /etc/boundary.d/configuration.hcl
 LimitMEMLOCK=infinity
 Capabilities=CAP_IPC_LOCK+ep
 CapabilityBoundingSet=CAP_SYSLOG CAP_IPC_LOCK
