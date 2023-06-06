@@ -220,3 +220,34 @@ resource "aws_security_group" "postgresql" {
   tags   = local.tags
   vpc_id = local.vpc_id
 }
+
+## POSTGRESQL
+
+resource "random_password" "postgresql" {
+  length  = 16
+  special = false
+}
+
+module "postgresql" {
+  source  = "terraform-aws-modules/rds/aws"
+  version = "~> 3.4"
+
+  allocated_storage       = 5
+  backup_retention_period = 0
+  backup_window           = "03:00-06:00"
+  engine                  = "postgres"
+  engine_version          = var.engine_version
+  family                  = "postgres12"
+  identifier              = "boundary"
+  instance_class          = "db.t2.micro"
+  maintenance_window      = "Mon:00:00-Mon:03:00"
+  major_engine_version    = "12"
+  name                    = "boundary"
+  password                = random_password.postgresql.result
+  port                    = 5432
+  storage_encrypted       = false
+  subnet_ids              = local.private_subnets
+  tags                    = local.tags
+  username                = "boundary"
+  vpc_security_group_ids  = [aws_security_group.postgresql.id]
+}
