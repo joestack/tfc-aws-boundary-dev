@@ -127,9 +127,9 @@ variable "organization" {
 #   default = "false"
 # }
 
-# variable "boundary_version" {
-#   default = "0.12.2-1"
-# }
+variable "boundary_version" {
+  default = "0.12.2-1"
+}
 
 # variable "boundary_lic" {
 #   default = "NULL"
