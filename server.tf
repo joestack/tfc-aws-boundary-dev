@@ -3,7 +3,7 @@
 locals {
   boundary_apt      = length(split("+", var.boundary_version)) == 2 ? "boundary-enterprise" : "boundary"
   ca_cert           = var.create_root_ca ? tls_private_key.ca.0.public_key_pem : "NULL"
-  fqdn_tls          = [for i in range(local.server_count) : format("%v-srv-%02d.%v", var.name, i + 1, var.dns_domain)]
+  fqdn_tls          = [for i in range(var.var.controller_desired_capacity) : format("%v-srv-%02d.%v", var.name, i + 1, var.dns_domain)]
   #fqdn_tls          = [for i in range(local.server_count) : format("%v-%02d.%v", var.server_name, i + 1, var.dns_domain)]
   #server_ca          = var.consul_tls_enabled ? tls_self_signed_cert.ca.0.cert_pem : "NULL"
   #consul_gossip_key = random_id.gossip.b64_std
