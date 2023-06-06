@@ -40,8 +40,9 @@ EOF
 ## FIXME tbc
 }
 
-copy_configuration() {
+init_configuration() {
     echo ${configuration} | base64 -d > /etc/boundary.d/configuration.hcl
+    boundary database init -config /etc/boundary.d/configuration.hcl -log-format json
 }
 
 start_boundary() {
@@ -55,5 +56,5 @@ start_boundary() {
 
 common
 [[ ${boundary_enabled} = "true" ]] && install_boundary_apt 
-[[ ${boundary_enabled} = "true" ]] && copy_configuration 
+[[ ${boundary_enabled} = "true" ]] && init_configuration 
 [[ ${boundary_enabled} = "true" ]] && start_boundary 

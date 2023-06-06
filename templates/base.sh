@@ -16,7 +16,7 @@ apt-get -y update
 
 echo "--> Installing common dependencies"
 apt-get -y install \
-  unzip ntp dnsmasq dnsmasq-base dnsutils jq
+  unzip ntp dnsmasq dnsmasq-base dnsutils jq awscli
 
 echo "--> Setting hostname..."
 echo "${node_name}" | sudo tee /etc/hostname
