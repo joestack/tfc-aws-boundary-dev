@@ -21,7 +21,6 @@ apt-get -y install ${boundary_apt}=${boundary_version}
 echo ${boundary_lic} > /etc/boundary.d/license.hclic
 #chown -R boundary:boundary /opt/boundary/
 
-echo ${configuration} > /etc/boundary.d/configuration.hcl
 
 tee /etc/systemd/system/boundary.service > /dev/null <<EOF
 [Unit]
@@ -38,14 +37,17 @@ CapabilityBoundingSet=CAP_SYSLOG CAP_IPC_LOCK
 WantedBy=multi-user.target
 EOF
 
-
-
-systemctl enable boundary
-systemctl start boundary
-
 ## FIXME tbc
 }
 
+copy_configuration() {
+    echo ${configuration} > /etc/boundary.d/configuration.hcl
+}
+
+start_boundary() {
+    systemctl enable boundary
+    systemctl start boundary
+}
 
 ####################
 #####   MAIN   #####
@@ -53,3 +55,5 @@ systemctl start boundary
 
 common
 [[ ${boundary_enabled} = "true" ]] && install_boundary_apt 
+[[ ${boundary_enabled} = "true" ]] && copy_configuration 
+[[ ${boundary_enabled} = "true" ]] && start_boundary 
