@@ -16,7 +16,7 @@ sudo echo "${server_ca}" > /etc/ssl/certs/hashistack_ca.pem
 #########################
 install_boundary_apt() {
 
-apt-get -y install ${boundary_apt}=${vault_version}
+apt-get -y install ${boundary_apt}=${boundary_version}
 echo ${boundary_lic} > /opt/boundary/license.hclic
 chown -R boundary:boundary /opt/boundary/
 
