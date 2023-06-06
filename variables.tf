@@ -5,7 +5,7 @@ variable "aws_region" {
 }
 
 variable "name" {
-  description = "Environment name to be used as Tag"
+  description = "Unique Name of the Environment also be used as Tag"
 }
 
 variable "vpc_id" {
@@ -27,6 +27,16 @@ variable "key_name" {
 variable "engine_version" {
   default     = "12.10"
   description = "The engine_version of the postgres db, within the postgres12 family"
+  type        = string
+}
+
+variable "controller_desired_capacity" {
+  default = "3"
+}
+
+variable "controller_instance_type" {
+  default     = "t3.small"
+  description = "Specifies the instance type of the controller EC2 instance"
   type        = string
 }
 
@@ -67,14 +77,14 @@ EOF
 # #   default = "hc-stack-srv"
 # # }
 
-# variable "root_block_device_size" {
-#   default = "80"
-# }
+variable "root_block_device_size" {
+  default = "80"
+}
 
-# variable "auto_join_value" {
-#   description = "Server rejoin tag_value to identify cluster instances"
-#   default     = "joestack_hashistack_autojoin"
-# }
+variable "auto_join_value" {
+  description = "Server rejoin tag_value to identify cluster instances"
+  default     = "joestack_hashistack_autojoin"
+}
 
 # variable "dns_domain" {
 #   description = "The Route53 Zone to assign DNS records to"
