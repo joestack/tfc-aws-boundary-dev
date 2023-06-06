@@ -339,7 +339,7 @@ resource "aws_instance" "server" {
   associate_public_ip_address = "false"
   vpc_security_group_ids      = [aws_security_group.controller.id]
   key_name                    = var.key_name
-  iam_instance_profile        = aws_iam_instance_profile.controller.name #was arn before
+  iam_instance_profile        = aws_iam_instance_profile.controller.name 
 
   tags = {
     #Name      = format("${var.server_name}-%02d", count.index + 1)

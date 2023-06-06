@@ -86,9 +86,9 @@ variable "auto_join_value" {
   default     = "joestack_hashistack_autojoin"
 }
 
-# variable "dns_domain" {
-#   description = "The Route53 Zone to assign DNS records to"
-# }
+variable "dns_domain" {
+  description = "The Route53 Zone to assign DNS records to"
+}
 
 
 
@@ -106,20 +106,20 @@ variable "auto_join_value" {
 
 # // GLOBAL CERT SETTINGS
 
-# variable "create_root_ca" {
-#   description = "Create a self-signed root ca based on hashicorp/terraform-provider-tls"
-#   default     = "true"
-# }
+variable "create_root_ca" {
+  description = "Create a self-signed root ca based on hashicorp/terraform-provider-tls"
+  default     = "true"
+}
 
-# variable "common_name" {
-#   description = "Cert common name"
-#   default     = "hashistack"
-# }
+variable "common_name" {
+  description = "Cert common name"
+  default     = "hashistack"
+}
 
-# variable "organization" {
-#   description = "Cert Organaization"
-#   default     = "joestack"
-# }
+variable "organization" {
+  description = "Cert Organaization"
+  default     = "joestack"
+}
 
 # //BOUNDARY SETTINGS
 
