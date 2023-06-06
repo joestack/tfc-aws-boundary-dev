@@ -251,3 +251,80 @@ module "postgresql" {
   username                = "boundary"
   vpc_security_group_ids  = [aws_security_group.postgresql.id]
 }
+
+
+### POLICY KMS
+
+data "aws_iam_policy_document" "controller" {
+  statement {
+    actions = [
+      "kms:Decrypt",
+      "kms:DescribeKey",
+      "kms:Encrypt"
+    ]
+
+    effect = "Allow"
+
+    resources = [aws_kms_key.auth.arn, aws_kms_key.root.arn]
+  }
+
+  # statement {
+  #   actions = [
+  #     "s3:*"
+  #   ]
+
+  #   effect = "Allow"
+
+  #   resources = [
+  #     "${data.aws_s3_bucket.boundary.arn}/",
+  #     "${data.aws_s3_bucket.boundary.arn}/*"
+  #   ]
+  # }
+}
+
+data "aws_iam_policy_document" "assume_role_policy" {
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    effect = "Allow"
+
+    principals {
+      identifiers = ["ec2.amazonaws.com"]
+      type        = "Service"
+    }
+  }
+}
+
+resource "aws_iam_policy" "controller" {
+  name   = "BoundaryControllerServiceRolePolicy"
+  policy = data.aws_iam_policy_document.controller.json
+}
+
+resource "aws_iam_role" "controller" {
+  assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
+  name               = "ServiceRoleForBoundaryController"
+  tags               = local.tags
+}
+
+resource "aws_iam_role_policy_attachment" "controller" {
+  policy_arn = aws_iam_policy.controller.arn
+  role       = aws_iam_role.controller.name
+}
+
+resource "aws_iam_instance_profile" "controller" {
+  role = aws_iam_role.controller.name
+}
+
+# The root key used by controllers
+resource "aws_kms_key" "root" {
+  deletion_window_in_days = 7
+  key_usage               = "ENCRYPT_DECRYPT"
+  tags                    = merge(local.tags, { Purpose = "root" })
+}
+
+# The worker-auth AWS KMS key used by controllers and workers
+resource "aws_kms_key" "auth" {
+  deletion_window_in_days = 7
+  key_usage               = "ENCRYPT_DECRYPT"
+  tags                    = merge(local.tags, { Purpose = "worker-auth" })
+}
