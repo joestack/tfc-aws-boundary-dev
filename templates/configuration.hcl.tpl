@@ -17,13 +17,13 @@ kms "awskms" {
 %{ endfor ~}
 
 listener "tcp" {
-  address     = "{{ds.meta_data.local_ipv4}}:9201"
+  address     = "$(private_ip):9201"
   purpose     = "cluster"
   tls_disable = true
 }
 
 listener "tcp" {
-  address     = "{{ds.meta_data.local_ipv4}}:9200"
+  address     = "$(private_ip):9200"
   purpose     = "api"
   tls_disable = true
 }
