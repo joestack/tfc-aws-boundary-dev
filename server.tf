@@ -4,13 +4,31 @@ locals {
   boundary_apt      = length(split("+", var.boundary_version)) == 2 ? "boundary-enterprise" : "boundary"
   ca_cert           = var.create_root_ca ? tls_private_key.ca.0.public_key_pem : "NULL"
   fqdn_tls          = [for i in range(var.controller_desired_capacity) : format("%v-srv-%02d.%v", var.name, i + 1, var.dns_domain)]
-  #fqdn_tls          = [for i in range(local.server_count) : format("%v-%02d.%v", var.server_name, i + 1, var.dns_domain)]
-  server_ca          = var.create_root_ca ? tls_self_signed_cert.ca.0.cert_pem : "NULL"
-  #consul_gossip_key = random_id.gossip.b64_std
-  #consul_protocol   = var.consul_tls_enabled ? "https" : "http"
-  #consul_init_token = random_uuid.consul_init_token.id
-  #server_count      = anytrue([var.boundary_enabled, var.vault_enabled, var.consul_enabled, var.nomad_enabled]) ? var.server_count : 0
-  #server_count      =  var.controller_desired_capacity
+  server_ca         = var.create_root_ca ? tls_self_signed_cert.ca.0.cert_pem : "NULL"
+  configuration     = templatefile(
+    "${path.module}/templates/configuration.hcl.tpl",
+    {
+      # Database URL for PostgreSQL
+      database_url = format(
+        "postgresql://%s:%s@%s/%s",
+        module.postgresql.db_instance_username,
+        module.postgresql.db_instance_password,
+        module.postgresql.db_instance_endpoint,
+        module.postgresql.db_instance_name
+      )
+
+      keys = [
+        {
+          key_id  = aws_kms_key.root.key_id
+          purpose = "root"
+        },
+        {
+          key_id  = aws_kms_key.auth.key_id
+          purpose = "worker-auth"
+        }
+      ]
+    }
+  )
 }
 
 data "template_file" "server" {
@@ -38,6 +56,15 @@ data "template_file" "server" {
     boundary_apt      = local.boundary_apt
     boundary_lic      = var.boundary_lic
   }
+
+  write_files = [
+    {
+      content     = local.configuration
+      owner       = "root:root"
+      path        = "/etc/boundary/configuration.hcl"
+      permissions = "0644"
+    }
+  ]
 }
 
 data "template_cloudinit_config" "server" {
