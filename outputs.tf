@@ -12,7 +12,7 @@ output "bastion_ip" {
 
 ## TEST
 output "controller_ips" {
-  value = aws_instance.server[*].public_ip
+  value = aws_instance.server[*].private_ip
 }
 
 # output "dns_name_set" {

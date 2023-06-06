@@ -50,4 +50,4 @@ systemctl start boundary
 ####################
 
 common
-#[[ ${vault_enabled} = "true" ]] && install_vault_apt 
+[[ ${boundary_enabled} = "true" ]] && install_boundary_apt 

@@ -328,30 +328,3 @@ resource "aws_kms_key" "auth" {
   key_usage               = "ENCRYPT_DECRYPT"
   tags                    = merge(local.tags, { Purpose = "worker-auth" })
 }
-
-## CONTROL NODES
-
-resource "aws_instance" "server" {
-  count                       = var.controller_desired_capacity
-  ami                         = data.aws_ami.boundary.id
-  instance_type               = var.controller_instance_type
-  subnet_id                   = module.vpc.private_subnets[count.index]
-  associate_public_ip_address = "false"
-  vpc_security_group_ids      = [aws_security_group.controller.id]
-  key_name                    = var.key_name
-  iam_instance_profile        = aws_iam_instance_profile.controller.name 
-
-  tags = {
-    #Name      = format("${var.server_name}-%02d", count.index + 1)
-    Name      = format("${var.name}-srv-%02d", count.index + 1)
-    auto_join = var.auto_join_value
-  }
-
-  root_block_device {
-    volume_type           = "gp2"
-    volume_size           = var.root_block_device_size
-    delete_on_termination = "true"
-  }
-
-  #user_data = element(data.template_cloudinit_config.server.*.rendered, count.index)
-}
