@@ -10,9 +10,11 @@ terraform {
 locals {
   #image_id = data.aws_ami.boundary.id
 
-  private_subnets = coalescelist(var.private_subnets, module.vpc.private_subnets)
+  #private_subnets = coalescelist(var.private_subnets, module.vpc.private_subnets)
+  private_subnets = module.vpc.private_subnets
 
-  public_subnets = coalescelist(var.public_subnets, module.vpc.public_subnets)
+  #public_subnets = coalescelist(var.public_subnets, module.vpc.public_subnets)
+  public_subnets = module.vpc.public_subnets
 
   tags = merge(
     var.tags,
