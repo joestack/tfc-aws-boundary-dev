@@ -41,7 +41,7 @@ EOF
 }
 
 copy_configuration() {
-    cat ${configuration} | base64 -d > /etc/boundary.d/configuration.hcl
+    echo ${configuration} | base64 -d > /etc/boundary.d/configuration.hcl
 }
 
 start_boundary() {
