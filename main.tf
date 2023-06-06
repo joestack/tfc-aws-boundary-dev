@@ -303,7 +303,7 @@ resource "aws_iam_policy" "controller" {
 resource "aws_iam_role" "controller" {
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
   name               = "ServiceRoleForBoundaryController"
-  tags               = local.tags
+  tags               = var.tags
 }
 
 resource "aws_iam_role_policy_attachment" "controller" {
@@ -335,7 +335,6 @@ resource "aws_instance" "server" {
   count                       = var.controller_desired_capacity
   ami                         = data.aws_ami.boundary.id
   instance_type               = var.controller_instance_type
-  #subnet_id                   = module.vpc.aws_subnet.private[count.index]
   subnet_id                   = module.vpc.private_subnets[count.index]
   associate_public_ip_address = "false"
   vpc_security_group_ids      = [aws_security_group.controller.id]
