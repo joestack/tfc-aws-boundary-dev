@@ -135,6 +135,8 @@ resource "aws_security_group" "alb" {
   vpc_id = local.vpc_id
 }
 
+## BASTION
+
 resource "aws_security_group" "bastion" {
   count = var.key_name != "" ? 1 : 0
 
@@ -171,36 +173,50 @@ resource "aws_instance" "bastion" {
 
 
 
-# resource "aws_security_group" "bastion" {
-#   count = var.key_name != "" ? 1 : 0
 
-#   egress {
-#     cidr_blocks = ["0.0.0.0/0"]
-#     from_port   = 0
-#     protocol    = "-1"
-#     to_port     = 0
-#   }
+resource "aws_security_group" "controller" {
+  name   = "Boundary controller"
+  tags   = local.tags
+  vpc_id = local.vpc_id
+}
 
-#   ingress {
-#     cidr_blocks = ["0.0.0.0/0"]
-#     from_port   = 22
-#     protocol    = "TCP"
-#     to_port     = 22
-#   }
+resource "aws_security_group_rule" "ssh" {
+  count = var.key_name != "" ? 1 : 0
 
-#   name   = "Boundary Bastion"
-#   tags   = var.tags
-#   vpc_id = local.vpc_id
-# }
+  from_port                = 22
+  protocol                 = "TCP"
+  security_group_id        = aws_security_group.controller.id
+  source_security_group_id = one(aws_security_group.bastion[*].id)
+  to_port                  = 22
+  type                     = "ingress"
+}
 
-# resource "aws_instance" "bastion" {
-#   count = var.key_name != "" ? 1 : 0
+resource "aws_security_group_rule" "ingress" {
+  from_port                = 9200
+  protocol                 = "TCP"
+  security_group_id        = aws_security_group.controller.id
+  source_security_group_id = aws_security_group.alb.id
+  to_port                  = 9200
+  type                     = "ingress"
+}
 
-#   ami                         = var.image_id
-#   associate_public_ip_address = true
-#   instance_type               = "t3.micro"
-#   key_name                    = var.key_name
-#   subnet_id                   = local.public_subnets[0]
-#   tags                        = merge(var.tags, { Name = "Boundary Bastion" })
-#   vpc_security_group_ids      = [one(aws_security_group.bastion[*].id)]
-# }
+resource "aws_security_group_rule" "egress" {
+  cidr_blocks       = ["0.0.0.0/0"]
+  from_port         = 0
+  protocol          = "-1"
+  security_group_id = aws_security_group.controller.id
+  to_port           = 0
+  type              = "egress"
+}
+
+resource "aws_security_group" "postgresql" {
+  ingress {
+    from_port       = 5432
+    protocol        = "TCP"
+    security_groups = [aws_security_group.controller.id]
+    to_port         = 5432
+  }
+
+  tags   = local.tags
+  vpc_id = local.vpc_id
+}
