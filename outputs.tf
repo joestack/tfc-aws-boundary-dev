@@ -1,13 +1,13 @@
 output "dns_name" {
   description = "The public DNS name of the controller load balancer"
-  value       = module.controllers.dns_name
+  value       = module.alb.lb_dns_name
 }
 
 # output "s3command" {
 #   description = "The S3 cp command used to display the contents of the cloud-init-output.log"
 
 output "bastion_ip" {
-  value = aws_instance.bastion.public_ip
+  value = aws_instance.bastion[0].public_ip
 }
 
 ## TEST
