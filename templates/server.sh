@@ -80,7 +80,6 @@ EOF
 
 
 init_configuration() {
-    #echo ${configuration} | base64 -d > /etc/boundary.d/configuration.hcl
     boundary database init -config /etc/boundary.d/configuration.hcl -log-format json
 }
 
