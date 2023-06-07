@@ -42,12 +42,18 @@ EOF
 
 create_configuration() {
     tee /etc/boundary.d/configuration.hcl > /dev/null <<EOF
-    controller {
+controller {
   database {
     url = "${database_url}"
   }
-
+  
+  #FIXME Name needs to be unique
   name = "controller"
+
+  #FIXME
+  #public_cluster_address = FIXME
+
+  license = "file:////etc/boundary.d/license.hclic"
 }
 
 disable_mlock = true
@@ -66,13 +72,20 @@ kms "awskms" {
 listener "tcp" {
   address     = "$(private_ip):9201"
   purpose     = "cluster"
-  tls_disable = true
+  #tls_disable = true
+  tls_disable = false
+  tls_cert_file = "/etc/ssl/certs/hashistack_fullchain.pem"
+  tls_key_file = "/etc/ssl/certs/hashistack_privkey.key"
+
 }
 
 listener "tcp" {
   address     = "$(private_ip):9200"
   purpose     = "api"
-  tls_disable = true
+  #tls_disable = true
+  tls_disable = false
+  tls_cert_file = "/etc/ssl/certs/hashistack_fullchain.pem"
+  tls_key_file = "/etc/ssl/certs/hashistack_privkey.key"
 }
 EOF
 
