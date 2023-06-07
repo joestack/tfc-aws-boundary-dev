@@ -141,7 +141,7 @@ resource "aws_security_group_rule" "allow_443" {
 }
 
 resource "aws_security_group_rule" "allow_egress_lb" {
-  type = egress 
+    type        = "egress" 
     cidr_blocks = ["0.0.0.0/0"]
     from_port   = 0
     protocol    = "-1"
