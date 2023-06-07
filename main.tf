@@ -131,14 +131,14 @@ resource "aws_security_group_rule" "ssh" {
   type                     = "ingress"
 }
 
-# resource "aws_security_group_rule" "ingress" {
-#   from_port                = 9200
-#   protocol                 = "TCP"
-#   security_group_id        = aws_security_group.controller.id
-#   source_security_group_id = aws_security_group.alb.id
-#   to_port                  = 9200
-#   type                     = "ingress"
-# }
+resource "aws_security_group_rule" "ingress" {
+  from_port                = 9200
+  protocol                 = "TCP"
+  security_group_id        = aws_security_group.controller.id
+  source_security_group_id = aws_security_group.controller_lb.id
+  to_port                  = 9200
+  type                     = "ingress"
+}
 
 resource "aws_security_group_rule" "egress" {
   cidr_blocks       = ["0.0.0.0/0"]
