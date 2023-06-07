@@ -74,66 +74,6 @@ module "vpc" {
   tags = local.tags
 }
 
-### ALB
-
-module "alb" {
-  source  = "terraform-aws-modules/alb/aws"
-  version = "~> 6.5"
-
-  http_tcp_listeners = [
-    {
-      port     = 80
-      protocol = "HTTP"
-    }
-  ]
-
-  load_balancer_type = "application"
-  name               = "boundary"
-  security_groups    = [aws_security_group.alb.id]
-  subnets            = local.public_subnets
-  tags               = local.tags
-  
-  target_groups = [
-    {
-      name             = "boundary"
-      backend_protocol = "HTTP"
-      backend_port     = 9200
-    }
-  ]
-
-  vpc_id = local.vpc_id
-}
-
-resource "aws_security_group" "alb" {
-  egress {
-    cidr_blocks = ["0.0.0.0/0"]
-    from_port   = 0
-    protocol    = "-1"
-    to_port     = 0
-  }
-
-  dynamic "ingress" {
-    for_each = [80, 443]
-
-    content {
-      cidr_blocks = ["0.0.0.0/0"]
-      from_port   = ingress.value
-      protocol    = "TCP"
-      to_port     = ingress.value
-    }
-  }
-
-  name = "Boundary Application Load Balancer"
-
-  tags = merge(
-    {
-      Name = "Boundary Application Load Balancer"
-    },
-    var.tags
-  )
-
-  vpc_id = local.vpc_id
-}
 
 ## BASTION
 
