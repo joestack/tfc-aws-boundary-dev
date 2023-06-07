@@ -140,7 +140,7 @@ resource "aws_security_group_rule" "allow_443" {
   security_group_id = aws_security_group.controller_lb.id
 }
 
-resource "aws_security_group_rule" "egress" {
+resource "aws_security_group_rule" "allow_egress_lb" {
   type = egress 
     cidr_blocks = ["0.0.0.0/0"]
     from_port   = 0
