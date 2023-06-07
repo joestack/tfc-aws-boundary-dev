@@ -48,7 +48,8 @@ controller {
   }
   
   #FIXME Name needs to be unique
-  name = "controller"
+  #name = "controller"
+  name = "${node_name}"
 
   #FIXME
   #public_cluster_address = FIXME
@@ -72,20 +73,20 @@ kms "awskms" {
 listener "tcp" {
   address     = "$(private_ip):9201"
   purpose     = "cluster"
-  #tls_disable = true
-  tls_disable = false
-  tls_cert_file = "/etc/ssl/certs/hashistack_fullchain.pem"
-  tls_key_file = "/etc/ssl/certs/hashistack_privkey.key"
+  tls_disable = true
+  #tls_disable = false
+  #tls_cert_file = "/etc/ssl/certs/hashistack_fullchain.pem"
+  #tls_key_file = "/etc/ssl/certs/hashistack_privkey.key"
 
 }
 
 listener "tcp" {
   address     = "$(private_ip):9200"
   purpose     = "api"
-  #tls_disable = true
-  tls_disable = false
-  tls_cert_file = "/etc/ssl/certs/hashistack_fullchain.pem"
-  tls_key_file = "/etc/ssl/certs/hashistack_privkey.key"
+  tls_disable = true
+  #tls_disable = false
+  #tls_cert_file = "/etc/ssl/certs/hashistack_fullchain.pem"
+  #tls_key_file = "/etc/ssl/certs/hashistack_privkey.key"
 }
 EOF
 
