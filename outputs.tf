@@ -1,6 +1,7 @@
 output "dns_name" {
   description = "The public DNS name of the controller load balancer"
-  value       = module.alb.lb_dns_name
+  #value       = module.alb.lb_dns_name
+  value       = aws_lb.controller.dns_name
 }
 
 # output "s3command" {
