@@ -2,9 +2,9 @@
 # used by the template data source to render the user_data scripts 
 locals {
   boundary_apt      = length(split("+", var.boundary_version)) == 2 ? "boundary-enterprise" : "boundary"
-  ca_cert           = var.create_root_ca ? tls_private_key.ca.0.public_key_pem : "NULL"
+  ca_cert           = var.create_root_ca ? tls_private_key.boundary.0.public_key_pem : "NULL"
   fqdn_tls          = [for i in range(var.controller_desired_capacity) : format("%v-srv-%02d.%v", var.name, i + 1, var.dns_domain)]
-  server_ca         = var.create_root_ca ? tls_self_signed_cert.ca.0.cert_pem : "NULL"
+  server_ca         = var.create_root_ca ? tls_self_signed_cert.boundary.0.cert_pem : "NULL"
   database_url      = format(
         "postgresql://%s:%s@%s/%s",
         module.postgresql.db_instance_username,
@@ -56,8 +56,8 @@ data "template_file" "server" {
     node_name         = format("${var.name}-srv-%02d", count.index + 1)
 #    node_name         = format("${var.server_name}-%02d", count.index + 1)
     ca_cert           = local.ca_cert
-    server_cert       = tls_locally_signed_cert.server-node[count.index].cert_pem
-    server_key        = tls_private_key.server-node[count.index].private_key_pem
+    server_cert       = tls_self_signed_cert.boundary[count.index].cert_pem
+    server_key        = tls_private_key.boundary[count.index].private_key_pem
     server_ca         = local.server_ca
     dns_domain        = var.dns_domain
     #kms_key_id        = local.kms_key_id
