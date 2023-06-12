@@ -189,7 +189,8 @@ resource "random_password" "postgresql" {
 
 module "postgresql" {
   source  = "terraform-aws-modules/rds/aws"
-  version = "~> 3.4"
+  #version = "~> 3.4"
+  version = "~> 5.9"
 
   allocated_storage       = 5
   backup_retention_period = 0
@@ -200,7 +201,7 @@ module "postgresql" {
   identifier              = "boundary"
   instance_class          = "db.t2.micro"
   maintenance_window      = "Mon:00:00-Mon:03:00"
-  major_engine_version    = "12"
+  major_engine_version    = "14"
   name                    = "boundary"
   password                = random_password.postgresql.result
   port                    = 5432
