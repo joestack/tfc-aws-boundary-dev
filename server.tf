@@ -56,8 +56,8 @@ data "template_file" "server" {
     node_name         = format("${var.name}-srv-%02d", count.index + 1)
 #    node_name         = format("${var.server_name}-%02d", count.index + 1)
     ca_cert           = local.ca_cert
-    server_cert       = tls_self_signed_cert.boundary[count.index].cert_pem
-    server_key        = tls_private_key.boundary[count.index].private_key_pem
+    server_cert       = tls_self_signed_cert.boundary[0].cert_pem
+    server_key        = tls_private_key.boundary[0].private_key_pem
     server_ca         = local.server_ca
     dns_domain        = var.dns_domain
     #kms_key_id        = local.kms_key_id
