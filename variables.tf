@@ -25,7 +25,7 @@ variable "key_name" {
 }
 
 variable "engine_version" {
-  default     = "14.2"
+  default     = "12.10"
   description = "The engine_version of the postgres db, within the postgres12 family"
   type        = string
 }
