@@ -200,7 +200,7 @@ module "postgresql" {
   backup_window           = "03:00-06:00"
   engine                  = "postgres"
   #engine_version          = var.engine_version
-  engine_version          = "14.2"
+  engine_version          = "14"
   family                  = "postgres14"
   #family                  = "postgres12"
   identifier              = "boundary"
