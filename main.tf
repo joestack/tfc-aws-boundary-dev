@@ -195,11 +195,12 @@ module "postgresql" {
   #version = "~> 3.4"
   version = "~> 5.9"
 
-  allocated_storage       = 5
+  allocated_storage       = 20
   backup_retention_period = 0
   backup_window           = "03:00-06:00"
   engine                  = "postgres"
-  engine_version          = var.engine_version
+  #engine_version          = var.engine_version
+  engine_version          = "14.2"
   family                  = "postgres14"
   #family                  = "postgres12"
   identifier              = "boundary"
@@ -216,6 +217,7 @@ module "postgresql" {
   tags                    = local.tags
   username                = "boundary"
   vpc_security_group_ids  = [aws_security_group.postgresql.id]
+  multi_az                = true
 }
 
 
