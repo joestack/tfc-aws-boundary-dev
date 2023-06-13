@@ -13,19 +13,28 @@ locals {
   image_id = data.aws_ami.boundary.id
 
   #private_subnets = coalescelist(var.private_subnets, module.vpc.private_subnets)
-  private_subnets = module.vpc.private_subnets
+  #private_subnets = module.vpc.private_subnets
 
   #public_subnets = coalescelist(var.public_subnets, module.vpc.public_subnets)
-  public_subnets = module.vpc.public_subnets
+  #public_subnets = module.vpc.public_subnets
+
+  pub_cidrs  = cidrsubnets("10.0.0.0/24", 4, 4, 4, 4)
+  priv_cidrs = cidrsubnets("10.0.100.0/24", 4, 4, 4, 4)
 
   tags = merge(
     var.tags,
     {
-      Owner = "terraform"
+      Name = "${var.name}-${random_pet.test.id}"
     }
   )
 
-  vpc_id = coalesce(var.vpc_id, module.vpc.vpc_id)
+  #vpc_id = coalesce(var.vpc_id, module.vpc.vpc_id)
+  vpc_id = aws_vpc.main.id
+}
+
+
+resource "random_pet" "test" {
+  length = 1
 }
 
 data "aws_availability_zones" "available" {}
@@ -48,33 +57,6 @@ data "aws_ami" "boundary" {
     values = ["hvm"]
   }
   owners = ["099720109477"] # Canonical
-}
-
-module "vpc" {
-  source  = "terraform-aws-modules/vpc/aws"
-  #version = "~> 3.7"
-  version = "~> 4.0"
-
-  azs                = data.aws_availability_zones.available.names
-  cidr               = var.cidr_block
-  create_vpc         = var.vpc_id != "" ? false : true
-  enable_nat_gateway = true
-  enable_dns_hostnames = true
-  name               = "boundary"
-
-  private_subnets = [
-    "10.0.1.0/24",
-    "10.0.2.0/24",
-    "10.0.3.0/24"
-  ]
-
-  public_subnets = [
-    "10.0.101.0/24",
-    "10.0.102.0/24",
-    "10.0.103.0/24"
-  ]
-
-  tags = local.tags
 }
 
 

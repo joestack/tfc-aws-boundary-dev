@@ -31,6 +31,15 @@ variable "engine_version" {
   type        = string
 }
 
+variable "num_subnets_public" {
+  default = 2
+}
+
+variable "num_subnets_private" {
+  default = 2
+}
+
+
 variable "controller_desired_capacity" {
   default = "3"
 }

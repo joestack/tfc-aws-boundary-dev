@@ -17,8 +17,8 @@ resource "aws_db_instance" "boundary" {
   password                = random_password.postgresql.result
   skip_final_snapshot = true
 
-  vpc_security_group_ids = [aws_security_group.postgresql.id]
-  #db_subnet_group_name   = module.vpc.private_subnets.name
+  vpc_security_group_ids = [aws_security_group.db.id]
+  db_subnet_group_name   = aws_db_subnet_group.boundary.name
   publicly_accessible    = true
 
   tags = local.tags
@@ -55,15 +55,45 @@ resource "aws_db_instance" "boundary" {
 #   multi_az                = true
 # }
 
-resource "aws_security_group" "postgresql" {
-  ingress {
-    from_port       = 5432
-    protocol        = "TCP"
-    security_groups = [aws_security_group.controller.id]
-    to_port         = 5432
-  }
+# resource "aws_security_group" "postgresql" {
+#   ingress {
+#     from_port       = 5432
+#     protocol        = "TCP"
+#     security_groups = [aws_security_group.controller.id]
+#     to_port         = 5432
+#   }
 
-  tags   = local.tags
+#   tags   = local.tags
+#   vpc_id = local.vpc_id
+# }
+
+resource "aws_security_group" "db" {
   vpc_id = local.vpc_id
+
+  tags = {
+    Name = "${var.tag}-db-${random_pet.test.id}"
+  }
 }
 
+resource "aws_security_group_rule" "allow_controller_sg" {
+  type                     = "ingress"
+  from_port                = 5432
+  to_port                  = 5432
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.db.id
+  source_security_group_id = aws_security_group.controller.id
+}
+
+resource "aws_security_group_rule" "allow_any_ingress" {
+  type              = "ingress"
+  from_port         = 5432
+  to_port           = 5432
+  protocol          = "tcp"
+  security_group_id = aws_security_group.db.id
+  cidr_blocks       = ["0.0.0.0/0"]
+}
+
+resource "aws_db_subnet_group" "boundary" {
+  name       = "boundary"
+  subnet_ids = aws_subnet.public.*.id
+}
