@@ -51,7 +51,7 @@ data "aws_ami" "boundary" {
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   #version = "~> 3.7"
-  version = "~> 4.7"
+  version = "~> 4.0"
 
   azs                = data.aws_availability_zones.available.names
   cidr               = var.cidr_block
