@@ -123,12 +123,12 @@ variable "create_root_ca" {
 
 variable "common_name" {
   description = "Cert common name"
-  default     = "hashistack"
+  default     = "boundary.dev"
 }
 
 variable "organization" {
   description = "Cert Organaization"
-  default     = "joestack"
+  default     = "Boundary, dev."
 }
 
 # //BOUNDARY SETTINGS
