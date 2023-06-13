@@ -50,7 +50,8 @@ data "aws_ami" "boundary" {
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "~> 3.7"
+  #version = "~> 3.7"
+  version = "~> 4.7"
 
   azs                = data.aws_availability_zones.available.names
   cidr               = var.cidr_block
@@ -189,8 +190,8 @@ resource "random_password" "postgresql" {
 
 module "postgresql" {
   source  = "terraform-aws-modules/rds/aws"
-  version = "~> 3.4"
-  #version = "~> 5.9"
+  #version = "~> 3.4"
+  version = "~> 4.7"
 
   allocated_storage       = 5
   backup_retention_period = 0
