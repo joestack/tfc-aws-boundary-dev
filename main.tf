@@ -192,7 +192,7 @@ resource "random_password" "postgresql" {
 module "postgresql" {
   source  = "terraform-aws-modules/rds/aws"
   #version = "~> 3.4"
-  version = "~> 4.7"
+  version = "~> 3.5"
 
   allocated_storage       = 5
   backup_retention_period = 0
