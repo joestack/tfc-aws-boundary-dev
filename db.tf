@@ -71,7 +71,7 @@ resource "aws_security_group" "db" {
   vpc_id = local.vpc_id
 
   tags = {
-    Name = "${var.tag}-db-${random_pet.test.id}"
+    Name = "${var.name}-db-${random_pet.test.id}"
   }
 }
 
