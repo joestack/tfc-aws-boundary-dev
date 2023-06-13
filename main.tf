@@ -204,7 +204,8 @@ module "postgresql" {
   instance_class          = "db.t2.micro"
   maintenance_window      = "Mon:00:00-Mon:03:00"
   major_engine_version    = "12"
-  name                    = "boundary"
+  #name                    = "boundary"
+  db_name                    = "boundary"
   password                = random_password.postgresql.result
   port                    = 5432
   storage_encrypted       = false
