@@ -23,6 +23,14 @@ resource "tls_self_signed_cert" "boundary" {
     common_name  = "${var.name}.${var.dns_domain}"
     organization = var.organization
   }
+
+    dns_names = [
+    for i in range(var.controller_desired_capacity) : format("%v-srv-%02d.%v", var.name, i + 1, var.dns_domain)
+  ]
+
+  ip_addresses = [
+    "127.0.0.1"
+  ]
 }
 
 
