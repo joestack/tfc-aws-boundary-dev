@@ -70,7 +70,8 @@ resource "aws_lb" "controller" {
   name               = "boundary"
   load_balancer_type = "network"
   internal           = false
-  subnets            = local.public_subnets
+  #subnets            = local.public_subnets
+  subnets            = aws_subnet.public.*.id
 
   tags = local.tags
 }

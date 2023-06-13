@@ -53,7 +53,7 @@ resource "aws_subnet" "public" {
   cidr_block        = local.pub_cidrs[count.index]
 
   tags = {
-    Name = "${var.tag}-${random_pet.test.id}-public-${count.index}"
+    Name = "${var.name}-${random_pet.test.id}-public-${count.index}"
   }
 }
 
@@ -64,7 +64,7 @@ resource "aws_subnet" "private" {
   cidr_block        = local.priv_cidrs[count.index]
 
   tags = {
-    Name = "${var.tag}-${random_pet.test.id}-private-${count.index}"
+    Name = "${var.name}-${random_pet.test.id}-private-${count.index}"
   }
 }
 
@@ -86,7 +86,7 @@ resource "aws_route_table" "public" {
   count  = var.num_subnets_public
   vpc_id = local.vpc_id
   tags = {
-    Name = "${var.tag}-${random_pet.test.id}-public-${count.index}"
+    Name = "${var.name}-${random_pet.test.id}-public-${count.index}"
   }
 }
 
@@ -112,7 +112,7 @@ resource "aws_route_table" "private" {
   count  = var.num_subnets_private
   vpc_id = local.vpc_id
   tags = {
-    Name = "${var.tag}-${random_pet.test.id}-private-${count.index}"
+    Name = "${var.name}-${random_pet.test.id}-private-${count.index}"
   }
 }
 

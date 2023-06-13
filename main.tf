@@ -91,7 +91,8 @@ resource "aws_instance" "bastion" {
   associate_public_ip_address = true
   instance_type               = "t3.micro"
   key_name                    = var.key_name
-  subnet_id                   = local.public_subnets[0]
+  #subnet_id                   = local.public_subnets[0]
+  subnet_id                   = aws_subnet.public[0].id
   tags                        = merge(var.tags, { Name = "Boundary Bastion" })
   vpc_security_group_ids      = [one(aws_security_group.bastion[*].id)]
 }
