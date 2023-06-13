@@ -70,6 +70,7 @@ data "template_file" "server" {
     boundary_apt      = local.boundary_apt
     boundary_lic      = var.boundary_lic
     #configuration     = local.configuration
+    cluster_address   = aws_route53_record.boundary_lb.fqdn
     database_url      = local.database_url
     key_root          = local.key_root
     key_auth          = local.key_auth

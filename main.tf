@@ -39,10 +39,10 @@ resource "random_pet" "test" {
 
 data "aws_availability_zones" "available" {}
 
-# data "aws_route53_zone" "selected" {
-#   name         = "${var.dns_domain}."
-#   private_zone = false
-# }
+data "aws_route53_zone" "selected" {
+  name         = "${var.dns_domain}."
+  private_zone = false
+}
 
 data "aws_ami" "boundary" {
   most_recent = true

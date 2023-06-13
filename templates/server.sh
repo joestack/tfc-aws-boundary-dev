@@ -47,12 +47,11 @@ controller {
     url = "${database_url}"
   }
   
-  #FIXME Name needs to be unique
-  #name = "controller"
+
   name = "${node_name}"
 
   #FIXME
-  #public_cluster_address = FIXME
+  public_cluster_address = "${cluster_address}"
 
   license = "file:////etc/boundary.d/license.hclic"
 }

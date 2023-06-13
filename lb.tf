@@ -76,6 +76,15 @@ resource "aws_lb" "controller" {
   tags = local.tags
 }
 
+resource "aws_route53_record" "boundary_lb" {
+  zone_id = aws_route53_zone.selected.zone_id
+  name    = "${var.name}.${var.dns_domain}"
+  type    = "CNAME"
+  ttl     = 300
+  records = [aws_lb.controller.dns_name]
+}
+
+
 resource "aws_lb_target_group" "controller" {
   name     = "boundary-tg"
   port     = 9200
