@@ -199,11 +199,13 @@ module "postgresql" {
   backup_window           = "03:00-06:00"
   engine                  = "postgres"
   engine_version          = var.engine_version
-  family                  = "postgres12"
+  family                  = "postgres14"
+  #family                  = "postgres12"
   identifier              = "boundary"
   instance_class          = "db.t2.micro"
   maintenance_window      = "Mon:00:00-Mon:03:00"
-  major_engine_version    = "12"
+  major_engine_version    = "14"
+  #major_engine_version    = "12"
   #name                    = "boundary"
   db_name                    = "boundary"
   password                = random_password.postgresql.result
