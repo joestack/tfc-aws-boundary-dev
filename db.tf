@@ -18,7 +18,7 @@ resource "aws_db_instance" "boundary" {
   skip_final_snapshot = true
 
   vpc_security_group_ids = [aws_security_group.postgresql.id]
-  db_subnet_group_name   = module.vpc.private_subnets.name
+  #db_subnet_group_name   = module.vpc.private_subnets.name
   publicly_accessible    = true
 
   tags = local.tags
