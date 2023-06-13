@@ -202,7 +202,7 @@ module "postgresql" {
   family                  = "postgres14"
   #family                  = "postgres12"
   identifier              = "boundary"
-  instance_class          = "db.t2.micro"
+  instance_class          = "db.t3.micro"
   maintenance_window      = "Mon:00:00-Mon:03:00"
   major_engine_version    = "14"
   #major_engine_version    = "12"
