@@ -77,8 +77,7 @@ resource "aws_lb" "controller" {
 }
 
 resource "aws_route53_record" "boundary_lb" {
-  #zone_id = aws_route53_zone.selected.zone_id
-  zone_id = aws_route53_zone.selected.zone_id
+  zone_id = data.aws_route53_zone.selected.zone_id
   name    = "${var.name}.${var.dns_domain}"
   type    = "CNAME"
   ttl     = 300
