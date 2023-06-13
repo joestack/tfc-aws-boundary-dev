@@ -10,7 +10,7 @@ locals {
         aws_db_instance.boundary.username,
         aws_db_instance.boundary.password,
         aws_db_instance.boundary.endpoint,
-        aws_db_instance.boundary.name
+        aws_db_instance.boundary.db_name
         # module.postgresql.db_instance_username,
         # module.postgresql.db_instance_password,
         # module.postgresql.db_instance_endpoint,
