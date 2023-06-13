@@ -7,10 +7,14 @@ locals {
   server_ca         = var.create_root_ca ? tls_self_signed_cert.boundary.0.cert_pem : "NULL"
   database_url      = format(
         "postgresql://%s:%s@%s/%s",
-        module.postgresql.db_instance_username,
-        module.postgresql.db_instance_password,
-        module.postgresql.db_instance_endpoint,
-        module.postgresql.db_instance_name
+        aws_db_instance.boundary.username,
+        aws_db_instance.boundary.password,
+        aws_db_instance.boundary.endpoint,
+        aws_db_instance.boundary.name
+        # module.postgresql.db_instance_username,
+        # module.postgresql.db_instance_password,
+        # module.postgresql.db_instance_endpoint,
+        # module.postgresql.db_instance_name
       )
   key_root          = aws_kms_key.root.key_id
   key_auth          = aws_kms_key.auth.key_id
