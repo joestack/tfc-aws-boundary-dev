@@ -1,8 +1,8 @@
 //GLOBAL CLUSTER SETTINGS
 
-variable "aws_region" {
-  description = "The AWS region to be used"
-}
+# variable "aws_region" {
+#   description = "The AWS region to be used"
+# }
 
 variable "name" {
   description = "Unique Name of the Environment also be used as Tag"
