@@ -32,11 +32,11 @@ variable "engine_version" {
 }
 
 variable "num_subnets_public" {
-  default = 2
+  default = 3
 }
 
 variable "num_subnets_private" {
-  default = 2
+  default = 3
 }
 
 
