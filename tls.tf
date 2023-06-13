@@ -20,7 +20,7 @@ resource "tls_self_signed_cert" "boundary" {
   ]
 
   subject {
-    common_name  = var.common_name
+    common_name  = "${var.name}.${var.dns_domain}"
     organization = var.organization
   }
 }
