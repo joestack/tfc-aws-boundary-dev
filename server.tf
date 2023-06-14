@@ -46,13 +46,6 @@ locals {
 }
 
 
-resource "null_resource" "always_run" {
-  triggers = {
-    always_run = timestamp()
-  }
-
-
-
 data "template_file" "server" {
  
   count = var.controller_desired_capacity
@@ -86,7 +79,7 @@ data "template_file" "server" {
   }
 
 }
-}
+
 
 data "template_cloudinit_config" "server" {
   count         = var.controller_desired_capacity
