@@ -46,6 +46,11 @@ locals {
 }
 
 data "template_file" "server" {
+    
+    triggers = {
+    always_run = timestamp()
+  }
+
   count = var.controller_desired_capacity
   template = (join("\n", tolist([
     file("${path.root}/templates/base.sh"),
