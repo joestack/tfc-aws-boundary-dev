@@ -56,7 +56,7 @@ data "template_file" "server" {
       # Replace `aws_appautoscaling_target` each time this instance of
       # the `aws_ecs_service` is replaced.
       #aws_ecs_service.svc.id
-      timestamp()
+      aws_instance.server.id
     ]
   }
 
