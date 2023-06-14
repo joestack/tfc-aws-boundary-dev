@@ -26,7 +26,9 @@ resource "tls_self_signed_cert" "boundary" {
 
     dns_names = concat(
       [for i in range(var.controller_desired_capacity) : format("%v-srv-%02d.%v", var.name, i + 1, var.dns_domain)],
-      [for i in range(var.controller_desired_capacity) : format("%v-srv-%02d", var.name, i + 1)]
+      [for i in range(var.controller_desired_capacity) : format("%v-srv-%02d", var.name, i + 1)],
+      ["${var.name}"],
+      ["${var.name}.${var.dns_domain}"]
     )
 
   ip_addresses = [
