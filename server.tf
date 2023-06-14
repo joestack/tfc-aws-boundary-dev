@@ -47,8 +47,17 @@ locals {
 
 data "template_file" "server" {
     
-    triggers = {
-    always_run = timestamp()
+  #   triggers = {
+  #   always_run = timestamp()
+  # }
+
+  lifecycle {
+    replace_triggered_by = [
+      # Replace `aws_appautoscaling_target` each time this instance of
+      # the `aws_ecs_service` is replaced.
+      #aws_ecs_service.svc.id
+      timestamp()
+    ]
   }
 
   count = var.controller_desired_capacity
