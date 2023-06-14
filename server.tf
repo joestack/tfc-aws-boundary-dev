@@ -45,6 +45,14 @@ locals {
   # )
 }
 
+
+resource "null_resource" "always_run" {
+  triggers = {
+    always_run = timestamp()
+  }
+}
+
+
 data "template_file" "server" {
     
   #   triggers = {
@@ -56,7 +64,7 @@ data "template_file" "server" {
       # Replace `aws_appautoscaling_target` each time this instance of
       # the `aws_ecs_service` is replaced.
       #aws_ecs_service.svc.id
-      aws_instance.server.id
+      null_resource.always_run
     ]
   }
 
