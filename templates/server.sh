@@ -4,9 +4,10 @@
 ###   COMMON BLOCK   ###
 ########################
 common() {
-sudo echo "${server_cert}" > /etc/ssl/certs/hashistack_fullchain.pem
-sudo echo "${server_key}" > /etc/ssl/certs/hashistack_privkey.key
-sudo echo "${server_ca}" > /etc/ssl/certs/hashistack_ca.pem
+  mkdir -p /etc/boundary.d/tls
+  echo "${server_cert}" > /etc/boundary.d/tls/boundary-cert.pem
+  echo "${server_key}" > /etc/boundary.d/tls/boundary-key.pem
+  echo "${server_ca}" > /etc/boundary.d/tls/boundary-ca.pem
 }
 
 
@@ -74,8 +75,8 @@ listener "tcp" {
   purpose     = "cluster"
   #tls_disable = true
   tls_disable = false
-  tls_cert_file = "/etc/ssl/certs/hashistack_fullchain.pem"
-  tls_key_file = "/etc/ssl/certs/hashistack_privkey.key"
+  tls_cert_file = "/etc/boundary.d/tls/boundary-cert.pem"
+  tls_key_file = "/etc/boundary.d/tls/boundary-key.pem"
 
 }
 
@@ -84,8 +85,8 @@ listener "tcp" {
   purpose     = "api"
   #tls_disable = true
   tls_disable = false
-  tls_cert_file = "/etc/ssl/certs/hashistack_fullchain.pem"
-  tls_key_file = "/etc/ssl/certs/hashistack_privkey.key"
+  tls_cert_file = "/etc/boundary.d/tls/boundary-cert.pem"
+  tls_key_file = "/etc/boundary.d/tls/boundary-key.pem"
 }
 EOF
 
