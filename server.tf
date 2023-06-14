@@ -50,24 +50,11 @@ resource "null_resource" "always_run" {
   triggers = {
     always_run = timestamp()
   }
-}
+
 
 
 data "template_file" "server" {
-    
-  #   triggers = {
-  #   always_run = timestamp()
-  # }
-
-  lifecycle {
-    replace_triggered_by = [
-      # Replace `aws_appautoscaling_target` each time this instance of
-      # the `aws_ecs_service` is replaced.
-      #aws_ecs_service.svc.id
-      null_resource.always_run
-    ]
-  }
-
+ 
   count = var.controller_desired_capacity
   template = (join("\n", tolist([
     file("${path.root}/templates/base.sh"),
@@ -98,6 +85,7 @@ data "template_file" "server" {
     key_auth          = local.key_auth
   }
 
+}
 }
 
 data "template_cloudinit_config" "server" {
