@@ -26,6 +26,7 @@ data "template_file" "worker" {
     database_url      = local.database_url
     key_root          = local.key_root
     key_auth          = local.key_auth
+    fqdn_tls          = local.fqdn_tls
   }
 
 }
