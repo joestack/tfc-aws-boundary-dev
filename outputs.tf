@@ -16,6 +16,13 @@ output "controller_ips" {
   value = aws_instance.server[*].private_ip
 }
 
+
+## TEST
+output "worker_ips" {
+  value = aws_instance.worker[*].private_ip
+}
+
+
 # output "dns_name_set" {
 #   value = aws_route53_record.alb.fqdn
 # }
