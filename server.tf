@@ -4,7 +4,7 @@ locals {
   boundary_apt      = length(split("+", var.boundary_version)) == 2 ? "boundary-enterprise" : "boundary"
   ca_cert           = var.create_root_ca ? tls_private_key.boundary.0.public_key_pem : "NULL"
   fqdn_tls          = [for i in range(var.controller_desired_capacity) : format("%v-srv-%02d.%v", var.name, i + 1, var.dns_domain)]
-  controller_ips    = [for ip in range(var.var.controller_desired_capacity) : element(aws_instance.server.*.private_ip, ip)]
+  controller_ips    = [for ip in range(var.controller_desired_capacity) : element(aws_instance.server.*.private_ip, ip)]
   server_ca         = var.create_root_ca ? tls_self_signed_cert.boundary.0.cert_pem : "NULL"
   database_url      = format(
         "postgresql://%s:%s@%s/%s",
