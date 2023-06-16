@@ -154,6 +154,51 @@ resource "aws_security_group_rule" "egress" {
   type              = "egress"
 }
 
+
+resource "aws_security_group" "worker" {
+  vpc_id = local.vpc_id
+
+  tags = local.tags
+}
+
+resource "aws_security_group_rule" "allow_ssh_worker" {
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.worker.id
+}
+
+resource "aws_security_group_rule" "allow_web_worker" {
+  type              = "ingress"
+  from_port         = 8000
+  to_port           = 8000
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.worker.id
+}
+
+resource "aws_security_group_rule" "allow_9202_worker" {
+  type              = "ingress"
+  from_port         = 9202
+  to_port           = 9202
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.worker.id
+}
+
+resource "aws_security_group_rule" "allow_egress_worker" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.worker.id
+}
+
+
+
 ### POLICY KMS
 
 data "aws_iam_policy_document" "controller" {
@@ -216,6 +261,64 @@ resource "aws_iam_instance_profile" "controller" {
   role = aws_iam_role.controller.name
 }
 
+
+resource "aws_iam_role" "boundary" {
+  name = "${var.name}-${random_pet.test.id}"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
+
+  tags = local.tags
+}
+
+resource "aws_iam_instance_profile" "boundary" {
+  name = "${var.name}-${random_pet.test.id}"
+  role = aws_iam_role.boundary.name
+}
+
+resource "aws_iam_role_policy" "boundary" {
+  name = "${var.name}-${random_pet.test.id}"
+  role = aws_iam_role.boundary.id
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": {
+    "Effect": "Allow",
+    "Action": [
+      "kms:DescribeKey",
+      "kms:GenerateDataKey",
+      "kms:Decrypt",
+      "kms:Encrypt",
+      "kms:ListKeys",
+      "kms:ListAliases"
+    ],
+    "Resource": [
+      "${aws_kms_key.root.arn}",
+      "${aws_kms_key.auth.arn}",
+      "${aws_kms_key.recovery.arn}"
+    ]
+  }
+}
+EOF
+}
+
+
+
+
 # The root key used by controllers
 resource "aws_kms_key" "root" {
   deletion_window_in_days = 7
@@ -228,4 +331,13 @@ resource "aws_kms_key" "auth" {
   deletion_window_in_days = 7
   key_usage               = "ENCRYPT_DECRYPT"
   tags                    = merge(local.tags, { Purpose = "worker-auth" })
+}
+
+resource "aws_kms_key" "recovery" {
+  description             = "Boundary recovery key"
+  deletion_window_in_days = 10
+
+  tags = {
+    Name = "${var.name}-${random_pet.test.id}"
+  }
 }

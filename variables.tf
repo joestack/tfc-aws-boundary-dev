@@ -41,7 +41,11 @@ variable "num_subnets_private" {
 
 
 variable "controller_desired_capacity" {
-  default = "3"
+  default = 3
+}
+
+variable "worker_desired_capacity" {
+  default = 3
 }
 
 variable "controller_instance_type" {

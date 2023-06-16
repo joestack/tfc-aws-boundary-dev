@@ -11,38 +11,10 @@ locals {
         aws_db_instance.boundary.password,
         aws_db_instance.boundary.endpoint,
         aws_db_instance.boundary.db_name
-        # module.postgresql.db_instance_username,
-        # module.postgresql.db_instance_password,
-        # module.postgresql.db_instance_endpoint,
-        # module.postgresql.db_instance_name
+
       )
   key_root          = aws_kms_key.root.key_id
   key_auth          = aws_kms_key.auth.key_id
-  # configuration     = base64encode(templatefile(
-  #   "${path.module}/templates/configuration.hcl.tpl",
-  #   {
-  #     # Database URL for PostgreSQL
-  #     database_url = format(
-  #       "postgresql://%s:%s@%s/%s",
-  #       module.postgresql.db_instance_username,
-  #       module.postgresql.db_instance_password,
-  #       module.postgresql.db_instance_endpoint,
-  #       module.postgresql.db_instance_name
-  #     )
-
-  #     keys = [
-  #       {
-  #         key_id  = aws_kms_key.root.key_id
-  #         purpose = "root"
-  #       },
-  #       {
-  #         key_id  = aws_kms_key.auth.key_id
-  #         purpose = "worker-auth"
-  #       }
-  #     ]
-  #   }
-  # )
-  # )
 }
 
 
@@ -123,11 +95,11 @@ resource "aws_instance" "server" {
 
 
 
-# resource "aws_route53_record" "server" {
-#   count   = var.controller_desired_capacity
-#   zone_id = data.aws_route53_zone.selected.zone_id
-#   name    = lookup(aws_instance.server.*.tags[count.index], "Name")
-#   type    = "A"
-#   ttl     = "300"
-#   records = [element(aws_instance.server.*.public_ip, count.index)]
-# }
+resource "aws_route53_record" "server" {
+  count   = var.controller_desired_capacity
+  zone_id = data.aws_route53_zone.selected.zone_id
+  name    = lookup(aws_instance.server.*.tags[count.index], "Name")
+  type    = "A"
+  ttl     = "300"
+  records = [element(aws_instance.server.*.private_ip, count.index)]
+}
