@@ -63,7 +63,7 @@ worker {
 	name = "${node_name}"
 	description = "A default worker created for demonstration"
 	controllers = [
-%{ for ip in controller_ips ~}
+%{ for ip in fqdn_tls ~}
     "${ip}",
 %{ endfor ~}
   ]
