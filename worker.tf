@@ -9,7 +9,7 @@ data "template_file" "worker" {
     worker_count      = var.worker_desired_capacity
     node_name         = format("${var.name}-wrkr-%02d", count.index + 1)
     #controller_ips    = aws_instance.server.*.private_ip
-    #controller_ips    = local.controller_ips
+    controller_ips    = local.controller_ips
 #    node_name         = format("${var.server_name}-%02d", count.index + 1)
     ca_cert           = local.ca_cert
     server_cert       = tls_self_signed_cert.boundary[0].cert_pem
@@ -26,7 +26,7 @@ data "template_file" "worker" {
     database_url      = local.database_url
     key_root          = local.key_root
     key_auth          = local.key_auth
-    fqdn_tls          = local.fqdn_tls
+    #fqdn_tls          = local.fqdn_tls
   }
 
 }
