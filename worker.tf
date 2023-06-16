@@ -51,8 +51,8 @@ resource "aws_instance" "worker" {
   ami                         = data.aws_ami.boundary.id
   instance_type               = var.controller_instance_type
 #  subnet_id                   = module.vpc.private_subnets[count.index]
-  subnet_id                   = element(aws_subnet.private.*.id, count.index)
-  associate_public_ip_address = "false"
+  subnet_id                   = element(aws_subnet.public.*.id, count.index)
+  associate_public_ip_address = "true"
   vpc_security_group_ids      = [aws_security_group.worker.id]
   key_name                    = var.key_name
   iam_instance_profile        = aws_iam_instance_profile.boundary.name
@@ -80,7 +80,7 @@ resource "aws_route53_record" "worker" {
   name    = lookup(aws_instance.worker.*.tags[count.index], "Name")
   type    = "A"
   ttl     = "300"
-  records = [element(aws_instance.worker.*.private_ip, count.index)]
+  records = [element(aws_instance.worker.*.public_ip, count.index)]
 }
 
 

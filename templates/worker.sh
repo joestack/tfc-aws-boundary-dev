@@ -62,7 +62,11 @@ worker {
 	public_addr = "$(public_ip)"
 	name = "${node_name}"
 	description = "A default worker created for demonstration"
-	controllers = [${controller_ips}]
+	controllers = [
+%{ for ip in controller_ips ~}
+    "${ip}",
+%{ endfor ~}
+    ]
 }
 
 kms "awskms" {
